@@ -1,0 +1,47 @@
+import React, { useState } from "react";
+import { Box, Grid, GridItem, Button, Input, useColorModeValue, VStack, HStack } from "@chakra-ui/react";
+import { FaFillDrip } from "react-icons/fa";
+
+const Index = () => {
+  const [gridSize] = useState(16); // fixed grid size for simplicity
+  const [pixels, setPixels] = useState(Array(gridSize * gridSize).fill("white"));
+  const [selectedColor, setSelectedColor] = useState("#000000");
+
+  const updatePixelColor = (index) => {
+    const newPixels = [...pixels];
+    newPixels[index] = selectedColor;
+    setPixels(newPixels);
+  };
+
+  const handleColorChange = (event) => {
+    setSelectedColor(event.target.value);
+  };
+
+  const resetGrid = () => {
+    setPixels(Array(gridSize * gridSize).fill("white"));
+  };
+
+  const gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+  const backgroundColor = useColorModeValue("gray.100", "gray.700");
+
+  return (
+    <VStack spacing={8} p={5} align="center">
+      <HStack spacing={4}>
+        <Input type="color" value={selectedColor} onChange={handleColorChange} />
+        <Button leftIcon={<FaFillDrip />} onClick={resetGrid}>
+          Reset
+        </Button>
+      </HStack>
+      <Box width="512px" height="512px" bg={backgroundColor} p={2}>
+        <Grid templateColumns={gridTemplateColumns} gap={1}>
+          {pixels.map((color, index) => (
+            <GridItem key={index} w="100%" h="100%" bg={color} onClick={() => updatePixelColor(index)} _hover={{ cursor: "pointer" }} />
+          ))}
+        </Grid>
+      </Box>
+    </VStack>
+  );
+};
+
+export default Index;
